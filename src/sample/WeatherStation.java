@@ -16,6 +16,7 @@ public class WeatherStation {
     private StringBuffer response;
     private boolean connected = false;
 
+
     public WeatherStation() {
         this.miasto = "Wroclaw";
         this.units = "metric";
@@ -36,6 +37,7 @@ public class WeatherStation {
         this.response = new StringBuffer();
         this.connected = false;
     }
+
 
     public void setMiasto(String miasto) {
         this.miasto = miasto;
@@ -101,7 +103,7 @@ public class WeatherStation {
 
     public Weather createWeatherObject() {
         Gson gson = new Gson();
-        if(!connected) {
+        if (!connected) {
             this.connect();
         }
         Map m = gson.fromJson(response.toString(), Map.class);
@@ -111,8 +113,10 @@ public class WeatherStation {
         return pogoda;
     }
 
-    public void clearResponse(){
+    public void clearResponse() {
         response = new StringBuffer();
         connected = false;
     }
+
+
 }
