@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.chart.CategoryAxis?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <top>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
@@ -48,11 +49,11 @@
                     <buttons>
                         <RadioButton fx:id="unitsMetric" mnemonicParsing="false" onAction="#celsius" selected="true" text=" ℃">
                            <toggleGroup>
-                              <ToggleGroup fx:id="units" />
+                              <ToggleGroup fx:id="unitsGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="unitsImperial" mnemonicParsing="false" onAction="#farenheit" text="°F" toggleGroup="$units" />
-                        <RadioButton fx:id="unitsDefault" mnemonicParsing="false" onAction="#kelvin" text="Kelvin" toggleGroup="$units" />
+                        <RadioButton fx:id="unitsImperial" mnemonicParsing="false" onAction="#fahrenheit" text="°F" toggleGroup="$unitsGroup" />
+                        <RadioButton fx:id="unitsDefault" mnemonicParsing="false" onAction="#kelvin" text="Kelvin" toggleGroup="$unitsGroup" />
                     </buttons>
                   </ButtonBar>
                </children>

@@ -1,11 +1,9 @@
 package sample;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 
-import java.time.LocalTime;
+import java.util.Observable;
 
-public class WeatherConnectionDelayController implements Runnable, Observable {
+public class WeatherConnectionDelayController extends Observable implements Runnable {
 
 
     protected Thread worker;
@@ -37,12 +35,6 @@ public class WeatherConnectionDelayController implements Runnable, Observable {
         isRunning = false;
     }
 
-    public void interrupt() {
-
-        isRunning = false;
-        worker.interrupt();
-    }
-
 
     @Override
     public void run() {
@@ -51,6 +43,9 @@ public class WeatherConnectionDelayController implements Runnable, Observable {
 
             try {
                 weather = station.createWeatherObject();
+                System.out.println("controller changed: "+ weather.toString());
+                setChanged();
+                notifyObservers(weather);
                 Thread.sleep(interval);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -61,13 +56,7 @@ public class WeatherConnectionDelayController implements Runnable, Observable {
 
     }
 
-    @Override
-    public void addListener(InvalidationListener invalidationListener) {
 
-    }
 
-    @Override
-    public void removeListener(InvalidationListener invalidationListener) {
 
-    }
 }

@@ -14,8 +14,9 @@ public class TestWeatherStation {
 
             String miasto = text.nextLine();
             WeatherStation wMiescie = new WeatherStation(miasto);
-            System.out.println(wMiescie.createWeatherObject().toString());
             WeatherConnectionDelayController controller = new WeatherConnectionDelayController(wMiescie, 5000);
+            WeatherObserwer obserwer = new WeatherObserwer();
+            controller.addObserver(obserwer);
             controller.run();
 
             System.out.println("Wyjsc? T/n");
