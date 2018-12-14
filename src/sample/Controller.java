@@ -2,6 +2,7 @@ package sample;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -9,16 +10,15 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 
 public class Controller implements Observer {
@@ -40,7 +40,7 @@ public class Controller implements Observer {
     private String info;
 
     Gson gson = new Gson();
-    File dataFile = new File("data");
+    File dataFile = new File("data.json");
 
     private ArrayList<int[]> nowTimeData;
     private ArrayList<Weather> weatherData;
@@ -126,42 +126,82 @@ public class Controller implements Observer {
 
     @FXML
     void loadData(ActionEvent event) {
-        Data data = Data.readJSON(dataFile);
-        System.out.println("loading");
-        chartTemperature.getData().clear();
-        chartHumidity.getData().clear();
-        chartPressure.getData().clear();
 
-        temperature.getData().clear();
-        temp_min.getData().clear();
-        temp_max.getData().clear();
-        humidity.getData().clear();
-        pressure.getData().clear();
-        humidity.getData().clear();
-        weatherData = new ArrayList<Weather>();
-        nowTimeData = new ArrayList<int[]>();
+        FileChooser choose = new FileChooser();
+        choose.getExtensionFilters().add(new FileChooser.ExtensionFilter("json", "*.json", "*.txt"));
+        final File[] ddd = {new File("")};
+        new Alert(Alert.AlertType.CONFIRMATION, "Czy chcesz załądować własny plik?", new ButtonType("tak", ButtonBar.ButtonData.YES), new ButtonType("załaduj z pamięci", ButtonBar.ButtonData.NO), new ButtonType("CANCEL", ButtonBar.ButtonData.CANCEL_CLOSE)).showAndWait().ifPresent(response -> {
+            switch (response.getButtonData()) {
+                case CANCEL_CLOSE: {
+                    System.out.println("cancel");
+                    ddd[0] = null;
+                    break;
+                }
+                case NO: {
+                    System.out.println("no");
+                    ddd[0] = dataFile;
+                    break;
+                }
+                case YES: {
+                    System.out.println("yes");
+                    ddd[0] = choose.showOpenDialog(new Stage());
+                    break;
+                }
+            }
+        });
 
-        units = data.getUnits();
-        startTime = LocalDateTime.of(data.getStartTime()[0], data.getStartTime()[1], data.getStartTime()[2], data.getStartTime()[3], data.getStartTime()[4], data.getStartTime()[5]);
-        miasto = data.getMiasto();
-        nowTimeData = data.getNowTime();
-        weatherData = data.getWeather();
+        if (ddd[0] != null) {
+            String path = ddd[0].toURI().toASCIIString();
+            System.out.println(path);
 
-        info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s", startTime.toString(), miasto);
+            Data data = Data.readJSON(ddd[0]);
+            System.out.println("loading");
+            chartTemperature.getData().clear();
+            chartHumidity.getData().clear();
+            chartPressure.getData().clear();
 
-        for (int i = 0; i < weatherData.size(); i++) {
-            LocalDateTime nowTime = LocalDateTime.of(nowTimeData.get(i)[0], nowTimeData.get(i)[1], nowTimeData.get(i)[2], nowTimeData.get(i)[3], nowTimeData.get(i)[4], nowTimeData.get(i)[5]);
-            actualizeDataSeries(nowTime, weatherData.get(i));
+            temperature.getData().clear();
+            temp_min.getData().clear();
+            temp_max.getData().clear();
+            humidity.getData().clear();
+            pressure.getData().clear();
+            humidity.getData().clear();
+            weatherData = new ArrayList<Weather>();
+            nowTimeData = new ArrayList<int[]>();
+
+            units = data.getUnits();
+            startTime = LocalDateTime.of(data.getStartTime()[0], data.getStartTime()[1], data.getStartTime()[2], data.getStartTime()[3], data.getStartTime()[4], data.getStartTime()[5]);
+            miasto = data.getMiasto();
+            nowTimeData = data.getNowTime();
+            weatherData = data.getWeather();
+
+            info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s", startTime.toString(), miasto);
+
+            for (int i = 0; i < weatherData.size(); i++) {
+                LocalDateTime nowTime = LocalDateTime.of(nowTimeData.get(i)[0], nowTimeData.get(i)[1], nowTimeData.get(i)[2], nowTimeData.get(i)[3], nowTimeData.get(i)[4], nowTimeData.get(i)[5]);
+                actualizeDataSeries(nowTime, weatherData.get(i));
+            }
+            actualizeCharts();
+            new Alert(Alert.AlertType.INFORMATION, "loaded").showAndWait();
         }
-        actualizeCharts();
+
+
     }
 
     @FXML
     void saveData(ActionEvent event) {
-        int[] start = {startTime.getYear(), startTime.getMonthValue(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute(), startTime.getSecond()};
+        FileChooser choose = new FileChooser();
+        choose.getExtensionFilters().add(new FileChooser.ExtensionFilter("json", "*.json", "*.txt"));
+        File dataFile = choose.showOpenDialog(new Stage());
+        if (dataFile != null) {
+            String path = dataFile.toURI().toASCIIString();
+            System.out.println(path);
+            int[] start = {startTime.getYear(), startTime.getMonthValue(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute(), startTime.getSecond()};
 
-        Data data = new Data(start, station.getMiasto(), nowTimeData, weatherData, station.getUnits());
-        Data.saveJSON(data, dataFile);
+            Data data = new Data(start, station.getMiasto(), nowTimeData, weatherData, station.getUnits());
+            Data.saveJSON(data, dataFile);
+            new Alert(Alert.AlertType.INFORMATION, "saved").showAndWait();
+        }
     }
 
     @FXML
@@ -188,7 +228,6 @@ public class Controller implements Observer {
 
     private void start() {
         areaStatistics.setText("");
-
         chartTemperature.getData().clear();
         chartHumidity.getData().clear();
         chartPressure.getData().clear();
@@ -295,7 +334,10 @@ public class Controller implements Observer {
             case 1: {
                 this.weather = (Weather) weather;
                 LocalDateTime nowTime = LocalDateTime.now();
-                Platform.runLater(() -> {actualizeDataSeries(nowTime, (Weather)weather); actualizeCharts();});
+                Platform.runLater(() -> {
+                    actualizeDataSeries(nowTime, (Weather) weather);
+                    actualizeCharts();
+                });
                 updateData(nowTime);
                 break;
             }
@@ -316,14 +358,18 @@ public class Controller implements Observer {
     private double[] calculateStatistics() {
         double liczbaPomiar, minT, maxT, stdT, minP, maxP, stdP, minH, maxH, stdH;
         liczbaPomiar = temperature.getData().size();
-        maxT = (double) temperature.getData().sorted().get(0).getYValue();
-        minT = (double) temperature.getData().sorted().get((int) liczbaPomiar - 1).getYValue();
+        Comparator<XYChart.Data<Number, Number>> valuesY = Comparator.comparingDouble(o -> (double) o.getYValue());
+        temperature.getData().sort(valuesY);
+        pressure.getData().sort(valuesY);
+        humidity.getData().sort(valuesY);
+        minT = (double) temperature.getData().get(0).getYValue();
+        maxT = (double) temperature.getData().get((int) liczbaPomiar - 1).getYValue();
         stdT = calcSTD(temperature);
-        maxP = (double) pressure.getData().sorted().get(0).getYValue();
-        minP = (double) pressure.getData().sorted().get((int) liczbaPomiar - 1).getYValue();
+        minP = (double) pressure.getData().get(0).getYValue();
+        maxP = (double) pressure.getData().get((int) liczbaPomiar - 1).getYValue();
         stdP = calcSTD(pressure);
-        maxH = (double) humidity.getData().sorted().get(0).getYValue();
-        minH = (double) humidity.getData().sorted().get((int) liczbaPomiar - 1).getYValue();
+        minH = (double) humidity.getData().get(0).getYValue();
+        maxH = (double) humidity.getData().get((int) liczbaPomiar - 1).getYValue();
         stdH = calcSTD(humidity);
         double[] statistics = {liczbaPomiar, minT, maxT, stdT, minP, maxP, stdP, minH, maxH, stdH};
         return statistics;
