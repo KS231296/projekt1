@@ -15,6 +15,14 @@ public class Weather {
         this.temp_max = temp_max;
     }
 
+    public Weather() {
+
+    }
+
+    public Weather(int connection) {
+
+    }
+
     public double getTemperatura() {
         return temp;
     }

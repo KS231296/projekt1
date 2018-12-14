@@ -1,6 +1,7 @@
 package sample;
 
 
+import java.io.IOException;
 import java.util.Observable;
 
 public class WeatherConnectionDelayController extends Observable implements Runnable {
@@ -11,6 +12,7 @@ public class WeatherConnectionDelayController extends Observable implements Runn
     protected int interval;
     private WeatherStation station;
     private Weather weather;
+    private int connectionResult;
 
     public WeatherConnectionDelayController(WeatherStation station, int interval) {
         this.interval = interval;
@@ -22,6 +24,17 @@ public class WeatherConnectionDelayController extends Observable implements Runn
         this.station = station;
     }
 
+    public WeatherStation getStation() {
+        return station;
+    }
+
+    public Weather getWeather() {
+        return weather;
+    }
+
+    public int getConnectionResult() {
+        return connectionResult;
+    }
 
     public int getInterval() {
         return interval;
@@ -37,19 +50,18 @@ public class WeatherConnectionDelayController extends Observable implements Runn
 
 
     @Override
-    public void run() {
+    public void run()  {
         isRunning = true;
         while (isRunning) {
 
             try {
                 weather = station.createWeatherObject();
-                System.out.println("controller changed: "+ weather.toString());
+                connectionResult = station.getConnectionResult();
                 setChanged();
                 notifyObservers(weather);
                 Thread.sleep(interval);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.out.println("Failed to complete operation");
             }
 
         }

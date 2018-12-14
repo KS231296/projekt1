@@ -1,6 +1,7 @@
 package sample;
 
 import com.google.gson.Gson;
+import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,7 +15,9 @@ public class WeatherStation {
     private String url;
     private String units;
     private StringBuffer response;
-    private boolean connected = false;
+    private int connectionResult = 0;
+
+    protected boolean connected = false;
 
 
     public WeatherStation() {
@@ -38,7 +41,6 @@ public class WeatherStation {
         this.connected = false;
     }
 
-
     public void setMiasto(String miasto) {
         this.miasto = miasto;
         this.connected = false;
@@ -47,6 +49,10 @@ public class WeatherStation {
     public void setUnits(String units) {
         this.units = units;
         this.connected = false;
+    }
+
+    public int getConnectionResult() {
+        return connectionResult;
     }
 
     public String getMiasto() {
@@ -83,7 +89,6 @@ public class WeatherStation {
             URL obj = new URL(this.createURL());
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
             connection.setRequestMethod("GET");
-            int responseCode = connection.getResponseCode();
 
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
@@ -93,23 +98,35 @@ public class WeatherStation {
             }
             in.close();
             connected = true;
+            connectionResult = 1;
         } catch (MalformedURLException ex) {
             System.out.println("bad url");
+            connectionResult = -1;
+
         } catch (IOException ex) {
             System.out.println("Connection failed");
+            connectionResult = -2;
         }
-
     }
 
     public Weather createWeatherObject() {
         Gson gson = new Gson();
+        Weather pogoda = new Weather();
         if (!connected) {
             this.connect();
         }
-        Map m = gson.fromJson(response.toString(), Map.class);
 
-        Weather pogoda = gson.fromJson(m.get("main").toString(), Weather.class);
-        this.clearResponse();
+        if (connectionResult == 1) {
+
+                Map m = gson.fromJson(response.toString(), Map.class);
+
+                pogoda = gson.fromJson(m.get("main").toString(), Weather.class);
+                this.clearResponse();
+            }else{
+            return pogoda;
+        }
+
+
         return pogoda;
     }
 
