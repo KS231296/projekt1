@@ -100,19 +100,16 @@ public class Controller implements Observer {
     @FXML
     void celsius(ActionEvent event) {
         units = "metric";
-        System.out.println("metric");
 
     }
 
     @FXML
     void fahrenheit(ActionEvent event) {
         units = "imperial";
-        System.out.println("imperial");
     }
 
     @FXML
     void interrupt(ActionEvent event) {
-        System.out.println("stopping");
         connectionDelayController.stop();
         weatherUpdates.interrupt();
         started = false;
@@ -121,7 +118,6 @@ public class Controller implements Observer {
     @FXML
     void kelvin(ActionEvent event) {
         units = "";
-        System.out.println("default");
     }
 
     @FXML
@@ -133,17 +129,14 @@ public class Controller implements Observer {
         new Alert(Alert.AlertType.CONFIRMATION, "Czy chcesz załądować własny plik?", new ButtonType("tak", ButtonBar.ButtonData.YES), new ButtonType("załaduj z pamięci", ButtonBar.ButtonData.NO), new ButtonType("CANCEL", ButtonBar.ButtonData.CANCEL_CLOSE)).showAndWait().ifPresent(response -> {
             switch (response.getButtonData()) {
                 case CANCEL_CLOSE: {
-                    System.out.println("cancel");
                     ddd[0] = null;
                     break;
                 }
                 case NO: {
-                    System.out.println("no");
                     ddd[0] = dataFile;
                     break;
                 }
                 case YES: {
-                    System.out.println("yes");
                     ddd[0] = choose.showOpenDialog(new Stage());
                     break;
                 }
@@ -152,10 +145,8 @@ public class Controller implements Observer {
 
         if (ddd[0] != null) {
             String path = ddd[0].toURI().toASCIIString();
-            System.out.println(path);
 
             Data data = Data.readJSON(ddd[0]);
-            System.out.println("loading");
             chartTemperature.getData().clear();
             chartHumidity.getData().clear();
             chartPressure.getData().clear();
@@ -175,7 +166,7 @@ public class Controller implements Observer {
             nowTimeData = data.getNowTime();
             weatherData = data.getWeather();
 
-            info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s", startTime.toString(), miasto);
+            info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), miasto, units);
 
             for (int i = 0; i < weatherData.size(); i++) {
                 LocalDateTime nowTime = LocalDateTime.of(nowTimeData.get(i)[0], nowTimeData.get(i)[1], nowTimeData.get(i)[2], nowTimeData.get(i)[3], nowTimeData.get(i)[4], nowTimeData.get(i)[5]);
@@ -195,7 +186,6 @@ public class Controller implements Observer {
         File dataFile = choose.showOpenDialog(new Stage());
         if (dataFile != null) {
             String path = dataFile.toURI().toASCIIString();
-            System.out.println(path);
             int[] start = {startTime.getYear(), startTime.getMonthValue(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute(), startTime.getSecond()};
 
             Data data = new Data(start, station.getMiasto(), nowTimeData, weatherData, station.getUnits());
@@ -267,7 +257,7 @@ public class Controller implements Observer {
         weatherUpdates.start();
         started = true;
         startTime = LocalDateTime.now();
-        info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s", startTime.toString(), miasto);
+        info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), miasto, units);
         areaStatistics.setText(info);
     }
 
@@ -343,10 +333,11 @@ public class Controller implements Observer {
             }
             case -1: {
                 Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "bad url").showAndWait());
+                started = false;
                 break;
             }
             case -2: {
-                Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Błąd połączenia").showAndWait());
+                Platform.runLater(() -> new Alert(Alert.AlertType.INFORMATION, "Błąd połączenia").showAndWait());
                 break;
             }
 

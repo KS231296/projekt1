@@ -84,7 +84,6 @@ public class WeatherStation {
     }
 
     public void connect() {
-        System.out.println("Connecting...");
         try {
             URL obj = new URL(this.createURL());
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
@@ -99,13 +98,15 @@ public class WeatherStation {
             in.close();
             connected = true;
             connectionResult = 1;
-        } catch (MalformedURLException ex) {
+        }catch (MalformedURLException ex) {
             System.out.println("bad url");
             connectionResult = -1;
 
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.out.println("Connection failed");
             connectionResult = -2;
+
         }
     }
 
@@ -118,11 +119,11 @@ public class WeatherStation {
 
         if (connectionResult == 1) {
 
-                Map m = gson.fromJson(response.toString(), Map.class);
+            Map m = gson.fromJson(response.toString(), Map.class);
 
-                pogoda = gson.fromJson(m.get("main").toString(), Weather.class);
-                this.clearResponse();
-            }else{
+            pogoda = gson.fromJson(m.get("main").toString(), Weather.class);
+            this.clearResponse();
+        } else {
             return pogoda;
         }
 
