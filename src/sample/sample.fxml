@@ -26,8 +26,8 @@
                     <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Miasto:" />
                         <TextField fx:id="txtMiasto" promptText="podaj miasto" />
-                        <Button fx:id="btnStartPause" mnemonicParsing="false" onAction="#startPause" style="-fx-background-radius: 10;" text="Start" />
-                        <Button fx:id="btnInterrupt" mnemonicParsing="false" onAction="#interrupt" text="Przerwij" />
+                        <Button fx:id="btnStartPause" mnemonicParsing="false" onAction="#startPause" style="-fx-background-radius: 90;" text="Start" />
+                        <Button fx:id="btnInterrupt" mnemonicParsing="false" onAction="#interrupt" style="-fx-background-radius: 20;" text="Przerwij" />
                         <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#loadData" prefHeight="25.0" text="Wczytaj dane" />
               <Button fx:id="btnSave" mnemonicParsing="false" onAction="#saveData" text="Zapisz dane" />
                     </children>
