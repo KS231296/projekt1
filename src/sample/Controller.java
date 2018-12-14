@@ -2,6 +2,7 @@ package sample;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,6 +65,12 @@ public class Controller implements Observer {
     private ButtonBar unitsBar;
 
     @FXML
+    private ContextMenu menuMiasta;
+
+    @FXML
+    private ChoiceBox<String> choiceTimeUnits;
+
+    @FXML
     private RadioButton unitsMetric;
 
     @FXML
@@ -113,6 +120,8 @@ public class Controller implements Observer {
         connectionDelayController.stop();
         weatherUpdates.interrupt();
         started = false;
+        btnStartPause.setText("Start");
+
     }
 
     @FXML
@@ -183,7 +192,7 @@ public class Controller implements Observer {
     void saveData(ActionEvent event) {
         FileChooser choose = new FileChooser();
         choose.getExtensionFilters().add(new FileChooser.ExtensionFilter("json", "*.json", "*.txt"));
-        File dataFile = choose.showOpenDialog(new Stage());
+        File dataFile = choose.showSaveDialog(new Stage());
         if (dataFile != null) {
             String path = dataFile.toURI().toASCIIString();
             int[] start = {startTime.getYear(), startTime.getMonthValue(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute(), startTime.getSecond()};
@@ -233,12 +242,33 @@ public class Controller implements Observer {
 
         station.setMiasto(miasto);
         station.setUnits(units);
+        int mnoznik = 0;
+        switch (choiceTimeUnits.getValue()) {
+            case "seconds": {
+                mnoznik = 1000;
+                break;
+            }
+            case "minutes": {
+                mnoznik = 60 * 1000;
+                break;
+            }
+            case "hours": {
+                mnoznik = 60 * 60 * 1000;
+                break;
+            }
+            case "days": {
+                mnoznik = 24 * 60 * 60 * 1000;
+                break;
+            }
+
+        }
+
         int odswierzanie = 60000;
         if (txtOdswierzanie.getText().equals("")) {
             new Alert(Alert.AlertType.WARNING, "Nie podano wartości odświerzania, ustawiono wartość domyślną. (60s)").showAndWait();
         } else {
             try {
-                odswierzanie = 1000 * Integer.parseInt(txtOdswierzanie.getText());
+                odswierzanie = mnoznik * Integer.parseInt(txtOdswierzanie.getText());
             } catch (IllegalArgumentException e) {
                 new Alert(Alert.AlertType.ERROR, "Podana wartość odświezrzania nie jest liczbą/ liczba całkowitą.").showAndWait();
                 started = false;
@@ -256,6 +286,7 @@ public class Controller implements Observer {
 
         weatherUpdates.start();
         started = true;
+        btnStartPause.setText("wstrzymaj");
         startTime = LocalDateTime.now();
         info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), miasto, units);
         areaStatistics.setText(info);
@@ -264,11 +295,13 @@ public class Controller implements Observer {
     private void resume() {
         weatherUpdates.resume();
         paused = false;
+        btnStartPause.setText("wstrzymaj");
     }
 
     private void pause() {
         weatherUpdates.suspend();
         paused = true;
+        btnStartPause.setText("wznów");
     }
 
     private void actualizeDataSeries(LocalDateTime nowTime, Weather weather) {

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -15,93 +18,106 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <top>
-      <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Miasto:" />
-                  <TextField fx:id="txtMiasto" promptText="podaj miasto" />
-                  <Button fx:id="btnStartPause" mnemonicParsing="false" onAction="#startPause" text="Start/wstrzymaj" />
-                  <Button fx:id="btnInterrupt" mnemonicParsing="false" onAction="#interrupt" text="Przerwij" />
-                  <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#loadData" prefHeight="25.0" prefWidth="67.0" text="Wczytaj" />
-               </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Czas odświerzania:" />
-                  <TextField fx:id="txtOdswierzanie" prefHeight="25.0" prefWidth="162.0" promptText="Wartość minimalna: &lt;15 s&gt;" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="[s]" />
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostki:" />
-                        <ButtonBar fx:id="unitsBar" prefHeight="40.0" prefWidth="200.0">
-                          <buttons>
-                              <RadioButton fx:id="unitsMetric" mnemonicParsing="false" onAction="#celsius" selected="true" text=" ℃">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="unitsGroup" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="unitsImperial" mnemonicParsing="false" onAction="#fahrenheit" text="°F" toggleGroup="$unitsGroup" />
-                              <RadioButton fx:id="unitsDefault" mnemonicParsing="false" onAction="#kelvin" text="Kelvin" toggleGroup="$unitsGroup" />
-                          </buttons>
-                        </ButtonBar>
-                     </children>
-                  </HBox>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-   </top>
-   <bottom>
-      <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="btnSave" mnemonicParsing="false" onAction="#saveData" text="Zapisz dane" />
-         </children>
-      </HBox>
-   </bottom>
-   <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <AreaChart fx:id="chartTemperature" animated="false" title="Temperatura">
-              <xAxis>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: linear-gradient(from 50% 50% to 87% 50%,repeat, #9662ff, #bfb6ff);" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+    <top>
+        <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Miasto:" />
+                        <TextField fx:id="txtMiasto" promptText="podaj miasto" />
+                        <Button fx:id="btnStartPause" mnemonicParsing="false" onAction="#startPause" style="-fx-background-radius: 10;" text="Start" />
+                        <Button fx:id="btnInterrupt" mnemonicParsing="false" onAction="#interrupt" text="Przerwij" />
+                        <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#loadData" prefHeight="25.0" text="Wczytaj dane" />
+              <Button fx:id="btnSave" mnemonicParsing="false" onAction="#saveData" text="Zapisz dane" />
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                <children>
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Czas odświerzania:" />
+                    <TextField fx:id="txtOdswierzanie" prefHeight="25.0" prefWidth="160.0" promptText="Wartość minimalna: &lt;15 s&gt;" />
+                    <ChoiceBox fx:id="choiceTimeUnits" prefHeight="25.0" prefWidth="76.0" value="minutes">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="seconds" />
+                            <String fx:value="minutes" />
+                            <String fx:value="hours" />
+                            <String fx:value="days" />
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                    <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostki temperatury:" />
+                              <ButtonBar fx:id="unitsBar" prefHeight="40.0" prefWidth="100.0">
+                                  <buttons>
+                                      <RadioButton fx:id="unitsMetric" mnemonicParsing="false" onAction="#celsius" prefHeight="17.0" prefWidth="50.0" selected="true" text=" ℃">
+                                          <toggleGroup>
+                                              <ToggleGroup fx:id="unitsGroup" />
+                                          </toggleGroup>
+                                      </RadioButton>
+                                      <RadioButton fx:id="unitsImperial" minWidth="45.0" mnemonicParsing="false" onAction="#fahrenheit" prefHeight="17.0" text="°F" toggleGroup="$unitsGroup" />
+                                      <RadioButton fx:id="unitsDefault" minWidth="61.0" mnemonicParsing="false" onAction="#kelvin" prefHeight="17.0" text="Kelvin" toggleGroup="$unitsGroup" />
+                                  </buttons>
+                              </ButtonBar>
+                           </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>
+        </top>
+<bottom>
+<HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+</bottom>
+<center>
+<VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+    <children>
+        <AreaChart fx:id="chartTemperature" animated="false" title="Temperatura">
+            <xAxis>
                 <NumberAxis forceZeroInRange="false" side="BOTTOM" />
-              </xAxis>
-              <yAxis>
+            </xAxis>
+            <yAxis>
                 <NumberAxis forceZeroInRange="false" side="LEFT" />
-              </yAxis>
-            </AreaChart>
-            <LineChart fx:id="chartPressure" animated="false" title="Ciśnienie">
-              <xAxis>
+            </yAxis>
+        </AreaChart>
+        <LineChart fx:id="chartPressure" animated="false" title="Ciśnienie">
+            <xAxis>
                 <NumberAxis forceZeroInRange="false" side="BOTTOM" />
-              </xAxis>
-              <yAxis>
+            </xAxis>
+            <yAxis>
                 <NumberAxis forceZeroInRange="false" side="LEFT" />
-              </yAxis>
-            </LineChart>
-            <LineChart fx:id="chartHumidity" animated="false" title="Wilgotność">
-              <xAxis>
+            </yAxis>
+        </LineChart>
+        <LineChart fx:id="chartHumidity" animated="false" title="Wilgotność">
+            <xAxis>
                 <NumberAxis forceZeroInRange="false" side="BOTTOM" />
-              </xAxis>
-              <yAxis>
+            </xAxis>
+            <yAxis>
                 <NumberAxis forceZeroInRange="false" side="LEFT" />
-              </yAxis>
-            </LineChart>
-         </children>
-      </VBox>
-   </center>
-   <left>
-      <TextArea fx:id="areaStatistics" editable="false" prefHeight="250.0" prefWidth="200.0" promptText="(Statistics and info)" BorderPane.alignment="CENTER">
-         <padding>
-            <Insets top="2.0" />
-         </padding>
-      </TextArea>
-   </left>
-</BorderPane>
+            </yAxis>
+        </LineChart>
+    </children>
+</VBox>
+</center>
+<left>
+<TextArea fx:id="areaStatistics" editable="false" opacity="0.46" prefHeight="250.0" prefWidth="200.0" promptText="(Statistics and info)" style="-fx-background-color: rgb(76,184,255);" stylesheets="@style.css" wrapText="true" BorderPane.alignment="CENTER">
+    <padding>
+        <Insets top="2.0" />
+    </padding>
+         <opaqueInsets>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </opaqueInsets>
+</TextArea>
+</left>
+        </BorderPane>
