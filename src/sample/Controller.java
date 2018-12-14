@@ -24,24 +24,24 @@ import java.util.*;
 
 public class Controller implements Observer {
 
-    WeatherStation station = new WeatherStation();
-    boolean started = false;
-    boolean paused = false;
-    LocalDateTime startTime;
+    private WeatherStation station = new WeatherStation();
+    private boolean started = false;
+    private boolean paused = false;
+    private LocalDateTime startTime;
 
     private Weather weather;
     private Observable weatherController;
 
     private Thread weatherUpdates = new Thread();
 
-    WeatherConnectionDelayController connectionDelayController;
+    private WeatherConnectionDelayController connectionDelayController;
 
     private String miasto;
     private String units = "metric";
     private String info;
 
     Gson gson = new Gson();
-    File dataFile = new File("data.json");
+    private File dataFile = new File("data.json");
 
     private ArrayList<int[]> nowTimeData;
     private ArrayList<Weather> weatherData;
@@ -166,8 +166,8 @@ public class Controller implements Observer {
             humidity.getData().clear();
             pressure.getData().clear();
             humidity.getData().clear();
-            weatherData = new ArrayList<Weather>();
-            nowTimeData = new ArrayList<int[]>();
+            weatherData = new ArrayList<>();
+            nowTimeData = new ArrayList<>();
 
             units = data.getUnits();
             startTime = LocalDateTime.of(data.getStartTime()[0], data.getStartTime()[1], data.getStartTime()[2], data.getStartTime()[3], data.getStartTime()[4], data.getStartTime()[5]);
@@ -237,8 +237,8 @@ public class Controller implements Observer {
         humidity.getData().clear();
         pressure.getData().clear();
         humidity.getData().clear();
-        weatherData = new ArrayList<Weather>();
-        nowTimeData = new ArrayList<int[]>();
+        weatherData = new ArrayList<>();
+        nowTimeData = new ArrayList<>();
 
         station.setMiasto(miasto);
         station.setUnits(units);
@@ -395,8 +395,7 @@ public class Controller implements Observer {
         minH = (double) humidity.getData().get(0).getYValue();
         maxH = (double) humidity.getData().get((int) liczbaPomiar - 1).getYValue();
         stdH = calcSTD(humidity);
-        double[] statistics = {liczbaPomiar, minT, maxT, stdT, minP, maxP, stdP, minH, maxH, stdH};
-        return statistics;
+        return new double[]{liczbaPomiar, minT, maxT, stdT, minP, maxP, stdP, minH, maxH, stdH};
     }
 
     private double calcSTD(javafx.scene.chart.XYChart.Series<Number, Number> series) {
