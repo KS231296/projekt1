@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -49,6 +50,7 @@ public class Controller implements Observer {
     @FXML
     private TextField txtMiasto;
 
+
     @FXML
     private Button btnStartPause;
 
@@ -66,6 +68,10 @@ public class Controller implements Observer {
 
     @FXML
     private ContextMenu menuMiasta;
+
+
+    @FXML
+    private MenuItem itemsMIasta;
 
     @FXML
     private ChoiceBox<String> choiceTimeUnits;
@@ -120,6 +126,7 @@ public class Controller implements Observer {
         connectionDelayController.stop();
         weatherUpdates.interrupt();
         started = false;
+        btnInterrupt.setDisable(true);
         btnStartPause.setText("Start");
 
     }
@@ -131,11 +138,11 @@ public class Controller implements Observer {
 
     @FXML
     void loadData(ActionEvent event) {
-
+        interrupt(event);
         FileChooser choose = new FileChooser();
         choose.getExtensionFilters().add(new FileChooser.ExtensionFilter("json", "*.json", "*.txt"));
         final File[] ddd = {new File("")};
-        new Alert(Alert.AlertType.CONFIRMATION, "Czy chcesz załądować własny plik?", new ButtonType("tak", ButtonBar.ButtonData.YES), new ButtonType("załaduj z pamięci", ButtonBar.ButtonData.NO), new ButtonType("CANCEL", ButtonBar.ButtonData.CANCEL_CLOSE)).showAndWait().ifPresent(response -> {
+        new Alert(Alert.AlertType.CONFIRMATION, "Czy chcesz załadować własny plik?", new ButtonType("tak", ButtonBar.ButtonData.YES), new ButtonType("załaduj z pamięci", ButtonBar.ButtonData.NO), new ButtonType("CANCEL", ButtonBar.ButtonData.CANCEL_CLOSE)).showAndWait().ifPresent(response -> {
             switch (response.getButtonData()) {
                 case CANCEL_CLOSE: {
                     ddd[0] = null;
@@ -174,8 +181,9 @@ public class Controller implements Observer {
             miasto = data.getMiasto();
             nowTimeData = data.getNowTime();
             weatherData = data.getWeather();
+            LocalDateTime endTime = LocalDateTime.of(nowTimeData.get(nowTimeData.size() - 1)[0], nowTimeData.get(nowTimeData.size() - 1)[1], nowTimeData.get(nowTimeData.size() - 1)[2], nowTimeData.get(nowTimeData.size() - 1)[3], nowTimeData.get(nowTimeData.size() - 1)[4], nowTimeData.get(nowTimeData.size() - 1)[5]);
 
-            info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), miasto, units);
+            info = String.format("Czas rozpoczęcia pomiarów: %s%nKoniec pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), endTime.toString(), miasto, units);
 
             for (int i = 0; i < weatherData.size(); i++) {
                 LocalDateTime nowTime = LocalDateTime.of(nowTimeData.get(i)[0], nowTimeData.get(i)[1], nowTimeData.get(i)[2], nowTimeData.get(i)[3], nowTimeData.get(i)[4], nowTimeData.get(i)[5]);
@@ -227,6 +235,7 @@ public class Controller implements Observer {
 
     private void start() {
         areaStatistics.setText("");
+
         chartTemperature.getData().clear();
         chartHumidity.getData().clear();
         chartPressure.getData().clear();
@@ -286,21 +295,26 @@ public class Controller implements Observer {
 
         weatherUpdates.start();
         started = true;
+        btnInterrupt.setDisable(false);
         btnStartPause.setText("wstrzymaj");
         startTime = LocalDateTime.now();
         info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), miasto, units);
         areaStatistics.setText(info);
+        txtMiasto.setText("");
+        txtOdswierzanie.setText("");
     }
 
     private void resume() {
         weatherUpdates.resume();
         paused = false;
+        btnInterrupt.setDisable(false);
         btnStartPause.setText("wstrzymaj");
     }
 
     private void pause() {
         weatherUpdates.suspend();
         paused = true;
+        btnInterrupt.setDisable(true);
         btnStartPause.setText("wznów");
     }
 

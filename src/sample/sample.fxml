@@ -9,6 +9,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -25,9 +27,16 @@
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Miasto:" />
-                        <TextField fx:id="txtMiasto" promptText="podaj miasto" />
+                        <TextField fx:id="txtMiasto" focusTraversable="false" promptText="podaj miasto">
+                     <contextMenu>
+                        <ContextMenu fx:id="menuMiasta">
+                          <items>
+                            <MenuItem fx:id="itemsMIasta" mnemonicParsing="true" text="Unspecified Action" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu></TextField>
                         <Button fx:id="btnStartPause" mnemonicParsing="false" onAction="#startPause" style="-fx-background-radius: 90;" text="Start" />
-                        <Button fx:id="btnInterrupt" mnemonicParsing="false" onAction="#interrupt" style="-fx-background-radius: 20;" text="Przerwij" />
+                        <Button fx:id="btnInterrupt" disable="true" mnemonicParsing="false" onAction="#interrupt" style="-fx-background-radius: 20;" text="Przerwij" />
                         <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#loadData" prefHeight="25.0" text="Wczytaj dane" />
               <Button fx:id="btnSave" mnemonicParsing="false" onAction="#saveData" text="Zapisz dane" />
                     </children>
@@ -38,7 +47,7 @@
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                 <children>
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Czas odświerzania:" />
-                    <TextField fx:id="txtOdswierzanie" prefHeight="25.0" prefWidth="160.0" promptText="Wartość minimalna: &lt;15 s&gt;" />
+                    <TextField fx:id="txtOdswierzanie" focusTraversable="false" prefHeight="25.0" prefWidth="160.0" promptText="Wartość minimalna: &lt;15 s&gt;" />
                     <ChoiceBox fx:id="choiceTimeUnits" prefHeight="25.0" prefWidth="76.0" value="minutes">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
