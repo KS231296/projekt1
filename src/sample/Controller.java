@@ -1,12 +1,8 @@
 package sample;
 
-import com.google.gson.Gson;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -17,9 +13,6 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -40,7 +33,7 @@ public class Controller implements Observer {
     private String units = "metric";
     private String info;
 
-    Gson gson = new Gson();
+
     private File dataFile = new File("data.json");
 
     private ArrayList<int[]> nowTimeData;
