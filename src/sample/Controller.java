@@ -31,7 +31,6 @@ public class Controller implements Observer {
    private LocalDateTime startTime;
 
     private Weather weather;
-    private Observable weatherController;
 
     private Thread weatherUpdates = new Thread();
 
@@ -241,7 +240,7 @@ public class Controller implements Observer {
             miasto = txtMiasto.getText();
             if (miasto.equals("")) {
                 miasto = "London";
-                txtMiasto.setText(miasto);
+                new Alert(Alert.AlertType.WARNING, "Nie podano miast, ustawiono wartość domyślną. (London)").showAndWait();
             }
             start();
         } else {
