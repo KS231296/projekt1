@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/projekt1/sample/WeatherConnectionDelayController.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Data.java" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -93,7 +93,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CSS" value="154" />
-          <entry key="JAVA" value="9614" />
+          <entry key="JAVA" value="9621" />
           <entry key="JSON" value="5" />
           <entry key="PLAIN_TEXT" value="28" />
           <entry key="XML" value="126" />
@@ -118,35 +118,34 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="152" column="7" lean-forward="true" selection-start-line="152" selection-start-column="7" selection-end-line="152" selection-end-column="7" />
+            <state relative-caret-position="463">
+              <caret line="446" column="1" selection-start-line="446" selection-start-column="1" selection-end-line="446" selection-end-column="1" />
               <folding>
+                <element signature="imports" expanded="true" />
                 <element signature="e#2565#2641#0" />
                 <element signature="e#2777#2778#0" expanded="true" />
                 <element signature="e#2811#2812#0" expanded="true" />
                 <element signature="e#2733#2928#0" />
                 <element signature="e#3099#3100#0" expanded="true" />
                 <element signature="e#3125#3126#0" expanded="true" />
-                <element signature="e#6724#9126#0" />
                 <element signature="e#9132#9262#0" />
                 <element signature="e#9268#9393#0" />
                 <element signature="e#9399#9958#0" />
                 <element signature="e#9964#11033#0" />
-                <element signature="e#11039#11629#0" />
                 <element signature="e#11635#12778#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Data.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="37" lean-forward="true" selection-start-line="16" selection-start-column="37" selection-end-line="16" selection-end-column="37" />
+            <state relative-caret-position="205">
+              <caret line="25" column="10" lean-forward="true" selection-start-line="25" selection-start-column="10" selection-end-line="25" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1360#1361#0" expanded="true" />
@@ -252,6 +251,8 @@
       <find>sta</find>
       <find>station</find>
       <find>connectionDelayController</find>
+      <find>json</find>
+      <find>gson</find>
     </findStrings>
   </component>
   <component name="FindManager">
@@ -279,9 +280,9 @@
         <option value="$PROJECT_DIR$/src/module-info.java" />
         <option value="$PROJECT_DIR$/src/sample/Weather.java" />
         <option value="$PROJECT_DIR$/src/sample/WeatherConnectionDelayController.java" />
-        <option value="$PROJECT_DIR$/src/sample/Data.java" />
         <option value="$PROJECT_DIR$/src/sample/WeatherStation.java" />
         <option value="$PROJECT_DIR$/src/sample/Controller.java" />
+        <option value="$PROJECT_DIR$/src/sample/Data.java" />
       </list>
     </option>
   </component>
@@ -298,7 +299,7 @@
     </treeState>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1386" />
@@ -352,7 +353,7 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545049703681" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545079207892" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="$PATH_TO_FX$" />
     <property name="project.structure.last.edited" value="Libraries" />
@@ -485,12 +486,12 @@
       <workItem from="1359379250712" duration="1302000" />
       <workItem from="1544097501288" duration="7021000" />
       <workItem from="1544607647986" duration="100436000" />
-      <workItem from="1544972685429" duration="10993000" />
+      <workItem from="1544972685429" duration="11401000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119752000" />
+    <option name="totallyTimeSpent" value="120160000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1386" height="788" extended-state="0" />
@@ -606,26 +607,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Data.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="37" lean-forward="true" selection-start-line="16" selection-start-column="37" selection-end-line="16" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1360#1361#0" expanded="true" />
-            <element signature="e#1388#1389#0" expanded="true" />
-            <element signature="e#1423#1424#0" expanded="true" />
-            <element signature="e#1455#1456#0" expanded="true" />
-            <element signature="e#1488#1489#0" expanded="true" />
-            <element signature="e#1517#1518#0" expanded="true" />
-            <element signature="e#1561#1562#0" expanded="true" />
-            <element signature="e#1591#1592#0" expanded="true" />
-            <element signature="e#1637#1638#0" expanded="true" />
-            <element signature="e#1667#1668#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Weather.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
@@ -691,22 +672,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="152" column="7" lean-forward="true" selection-start-line="152" selection-start-column="7" selection-end-line="152" selection-end-column="7" />
+        <state relative-caret-position="463">
+          <caret line="446" column="1" selection-start-line="446" selection-start-column="1" selection-end-line="446" selection-end-column="1" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#2565#2641#0" />
             <element signature="e#2777#2778#0" expanded="true" />
             <element signature="e#2811#2812#0" expanded="true" />
             <element signature="e#2733#2928#0" />
             <element signature="e#3099#3100#0" expanded="true" />
             <element signature="e#3125#3126#0" expanded="true" />
-            <element signature="e#6724#9126#0" />
             <element signature="e#9132#9262#0" />
             <element signature="e#9268#9393#0" />
             <element signature="e#9399#9958#0" />
             <element signature="e#9964#11033#0" />
-            <element signature="e#11039#11629#0" />
             <element signature="e#11635#12778#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Data.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="25" column="10" lean-forward="true" selection-start-line="25" selection-start-column="10" selection-end-line="25" selection-end-column="10" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1360#1361#0" expanded="true" />
+            <element signature="e#1388#1389#0" expanded="true" />
+            <element signature="e#1423#1424#0" expanded="true" />
+            <element signature="e#1455#1456#0" expanded="true" />
+            <element signature="e#1488#1489#0" expanded="true" />
+            <element signature="e#1517#1518#0" expanded="true" />
+            <element signature="e#1561#1562#0" expanded="true" />
+            <element signature="e#1591#1592#0" expanded="true" />
+            <element signature="e#1637#1638#0" expanded="true" />
+            <element signature="e#1667#1668#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -789,7 +789,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>lib</last-edited>
+          <last-edited>com.google.code.gson:gson:2.8.5</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

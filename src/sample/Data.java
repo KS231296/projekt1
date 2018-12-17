@@ -16,7 +16,7 @@ public class Data {
     private String miasto;
     private ArrayList<int[]> nowTime;
     private ArrayList<Weather> weather;
-   static Gson gson = new Gson();
+    static Gson gson = new Gson();
 
 
     public Data(int[] startTime, String miasto, ArrayList<int[]> nowTime, ArrayList<Weather> weather, String units) {
