@@ -1,5 +1,8 @@
 package sample;
 
+/**
+ * klasa zawierajaca informacje o pogodzie
+ */
 public class Weather {
     private double temp;
     private double pressure;

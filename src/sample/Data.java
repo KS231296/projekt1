@@ -7,6 +7,9 @@ import javafx.scene.control.Alert;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * klasa do przechowywania danych
+ */
 public class Data {
     private String units;
     private int[] startTime;

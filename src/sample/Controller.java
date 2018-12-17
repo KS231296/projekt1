@@ -28,14 +28,14 @@ public class Controller implements Observer {
     private WeatherStation station = new WeatherStation();
     private boolean started = false;
     private boolean paused = false;
-    private LocalDateTime startTime;
+   private LocalDateTime startTime;
 
     private Weather weather;
     private Observable weatherController;
 
     private Thread weatherUpdates = new Thread();
 
-    private WeatherConnectionDelayController connectionDelayController;
+
 
     private String miasto;
     private String units = "metric";
@@ -109,21 +109,32 @@ public class Controller implements Observer {
     private XYChart.Series<Number, Number> humidity = new XYChart.Series<>();
     private XYChart.Series<Number, Number> pressure = new XYChart.Series<>();
 
-
+    /**
+     * ustawia rodzaj jednostek temperatury
+     * @param event po kliknieciu radio button unitsMetric
+     */
     @FXML
     void celsius(ActionEvent event) {
         units = "metric";
 
     }
 
+    /**
+     * ustawia rodzaj jednostek temperatury
+     * @param event po kliknieciu radio button unitsImperial
+     */
     @FXML
     void fahrenheit(ActionEvent event) {
         units = "imperial";
     }
 
+    /**
+     * przerywa watek pobierania danych pogodowych
+     * @param event po kliknieciu btnInterrupt
+     */
     @FXML
     void interrupt(ActionEvent event) {
-        connectionDelayController.stop();
+        station.stop();
         weatherUpdates.interrupt();
         started = false;
         btnInterrupt.setDisable(true);
@@ -131,11 +142,19 @@ public class Controller implements Observer {
 
     }
 
+    /**
+     * ustawia rodzaj jednostek temperatury
+     * @param event po kliknieciu radio button unitsDefault
+     */
     @FXML
     void kelvin(ActionEvent event) {
         units = "";
     }
 
+    /**
+     * Ladowanie danych z pliku
+     * @param event po kliknieciu btnLoad
+     */
     @FXML
     void loadData(ActionEvent event) {
         interrupt(event);
@@ -196,6 +215,10 @@ public class Controller implements Observer {
 
     }
 
+    /**
+     *
+     * @param event
+     */
     @FXML
     void saveData(ActionEvent event) {
         FileChooser choose = new FileChooser();
@@ -232,7 +255,9 @@ public class Controller implements Observer {
 
     }
 
-
+    /**
+     * rozpoczyna watek pobierania i zapisywania danych
+     */
     private void start() {
         areaStatistics.setText("");
 
@@ -289,9 +314,9 @@ public class Controller implements Observer {
             new Alert(Alert.AlertType.WARNING, "Zbyt mała wartość odświerzania, ustawiono wartość minimalną. (15s)").showAndWait();
         }
 
-        connectionDelayController = new WeatherConnectionDelayController(station, odswierzanie);
-        weatherUpdates = new Thread(connectionDelayController);
-        connectionDelayController.addObserver(this);
+        station.setInterval(odswierzanie);
+        weatherUpdates = new Thread(station);
+        station.addObserver(this);
 
         weatherUpdates.start();
         started = true;
@@ -361,9 +386,9 @@ public class Controller implements Observer {
     }
 
     @Override
-    public void update(Observable weatherController, Object weather) {
-        WeatherConnectionDelayController con = (WeatherConnectionDelayController) weatherController;
-        switch (con.getConnectionResult()) {
+    public void update(Observable weatherStation, Object weather) {
+        WeatherStation station = (WeatherStation) weatherStation;
+        switch (station.getConnectionResult()) {
             case 0: {
                 Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "??").showAndWait());
                 break;
