@@ -149,7 +149,6 @@ public class Controller implements Observer {
      */
     @FXML
     void loadData(ActionEvent event) {
-        interrupt(event);
         FileChooser choose = new FileChooser();
         choose.getExtensionFilters().add(new FileChooser.ExtensionFilter("json", "*.json", "*.txt"));
         final File[] ddd = {new File("")};
@@ -161,19 +160,21 @@ public class Controller implements Observer {
                 }
                 case NO: {
                     ddd[0] = dataFile;
+                    interrupt(event); // przerwanie aktywnego wątku pobierania danych (jeśli wcześniej był uruchomiony)
                     break;
                 }
                 case YES: {
                     ddd[0] = choose.showOpenDialog(new Stage());
+                    interrupt(event); // przerwanie aktywnego wątku pobierania danych (jeśli wcześniej był uruchomiony)
                     break;
                 }
             }
-        });
+        });  // wyświetlenie zapytania przy wybraniu własnego pliku otwiera się okno wyboru pliku lub załadowanie domyślnego pliku danych(ostatnio wykonywane pomiary), można również anulować akcje
 
         if (ddd[0] != null) {
             String path = ddd[0].toURI().toASCIIString();
 
-            Data data = Data.readJSON(ddd[0]);
+            Data data = Data.readJSON(ddd[0]); //odczytanie danych z pliku JSON
             chartTemperature.getData().clear();
             chartHumidity.getData().clear();
             chartPressure.getData().clear();
@@ -186,6 +187,7 @@ public class Controller implements Observer {
             humidity.getData().clear();
             weatherData = new ArrayList<>();
             nowTimeData = new ArrayList<>();
+// wyczyszczenie wykresów i serii danych
 
             units = data.getUnits();
             startTime = LocalDateTime.of(data.getStartTime()[0], data.getStartTime()[1], data.getStartTime()[2], data.getStartTime()[3], data.getStartTime()[4], data.getStartTime()[5]);
@@ -193,7 +195,7 @@ public class Controller implements Observer {
             nowTimeData = data.getNowTime();
             weatherData = data.getWeather();
             LocalDateTime endTime = LocalDateTime.of(nowTimeData.get(nowTimeData.size() - 1)[0], nowTimeData.get(nowTimeData.size() - 1)[1], nowTimeData.get(nowTimeData.size() - 1)[2], nowTimeData.get(nowTimeData.size() - 1)[3], nowTimeData.get(nowTimeData.size() - 1)[4], nowTimeData.get(nowTimeData.size() - 1)[5]);
-
+// aktualizacja zmiennych
             info = String.format("Czas rozpoczęcia pomiarów: %s%nKoniec pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), endTime.toString(), miasto, units);
 
             for (int i = 0; i < weatherData.size(); i++) {
@@ -208,27 +210,28 @@ public class Controller implements Observer {
     }
 
     /**
-     *
+     * zapis danych do pliku z wyborem pliku zapisu. Dane są na bieżąco zapisywane do pliku domyślnego  - data.json
      * @param event
      */
     @FXML
     void saveData(ActionEvent event) {
         FileChooser choose = new FileChooser();
         choose.getExtensionFilters().add(new FileChooser.ExtensionFilter("json", "*.json", "*.txt"));
-        File dataFile = choose.showSaveDialog(new Stage());
+        File dataFile = choose.showSaveDialog(new Stage()); // tworzenie okna do zapisu pliku
         if (dataFile != null) {
             String path = dataFile.toURI().toASCIIString();
             int[] start = {startTime.getYear(), startTime.getMonthValue(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute(), startTime.getSecond()};
 
             Data data = new Data(start, station.getMiasto(), nowTimeData, weatherData, station.getUnits());
             Data.saveJSON(data, dataFile);
-            new Alert(Alert.AlertType.INFORMATION, "saved").showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "saved").show(); // po wyświetleniu informacji o zapisie danych wątek połączenia jest kontynuowany
         }
     }
 
+
     @FXML
     void startPause(ActionEvent event) {
-
+// do określenia którą metodę wybrać przy kliknięciu przycisku start/pause
         if (!started) {
             miasto = txtMiasto.getText();
             if (miasto.equals("")) {
@@ -265,7 +268,7 @@ public class Controller implements Observer {
         humidity.getData().clear();
         weatherData = new ArrayList<>();
         nowTimeData = new ArrayList<>();
-
+// zresetowanie danych wyświetlanych w aplikacji
         station.setMiasto(miasto);
         station.setUnits(units);
         int mnoznik = 0;
@@ -288,7 +291,7 @@ public class Controller implements Observer {
             }
 
         }
-
+// aktualizacja zmiennych
         int odswierzanie = 60000;
         if (txtOdswierzanie.getText().equals("")) {
             new Alert(Alert.AlertType.WARNING, "Nie podano wartości odświerzania, ustawiono wartość domyślną. (60s)").showAndWait();
@@ -307,12 +310,12 @@ public class Controller implements Observer {
         }
 
         station.setInterval(odswierzanie);
-        weatherUpdates = new Thread(station);
+        weatherUpdates = new Thread(station); // utworzenie nowego wątku
         station.addObserver(this);
 
-        weatherUpdates.start();
+        weatherUpdates.start(); // rozpoczęcie wątku pobierania informacji o pogodzie
         started = true;
-        btnInterrupt.setDisable(false);
+        btnInterrupt.setDisable(false); // aktywacja przycisku przerwania
         btnStartPause.setText("wstrzymaj");
         startTime = LocalDateTime.now();
         info = String.format("Czas rozpoczęcia pomiarów: %s%nMiasto: %s%nJednostki: %s", startTime.toString(), miasto, units);
@@ -324,17 +327,24 @@ public class Controller implements Observer {
     private void resume() {
         weatherUpdates.resume();
         paused = false;
-        btnInterrupt.setDisable(false);
+        btnInterrupt.setDisable(false); // aktywacja przycisku przerwania
         btnStartPause.setText("wstrzymaj");
     }
 
     private void pause() {
         weatherUpdates.suspend();
         paused = true;
-        btnInterrupt.setDisable(true);
+        btnInterrupt.setDisable(true); // dezaktywacja przycisku przerwania
         btnStartPause.setText("wznów");
     }
 
+
+    /**
+     *
+     * Metoda do aktualizacji serii danych
+     * @param nowTime aktualny czas
+     * @param weather aktualna pogoda
+     */
     private void actualizeDataSeries(LocalDateTime nowTime, Weather weather) {
         Long now = Duration.between(startTime, nowTime).toSeconds();
 
@@ -345,6 +355,9 @@ public class Controller implements Observer {
         pressure.getData().add(new XYChart.Data<>(now, weather.getCisnienie()));
     }
 
+    /**
+     * Metoda aktualizowania wykresów
+     */
     private void actualizeCharts() {
 
         Platform.runLater(() -> {
@@ -368,15 +381,24 @@ public class Controller implements Observer {
 
     }
 
+    /**
+     * Aktualizacja danych zapisanych w pliku domyślnym
+     * @param nowTime
+     */
     public void updateData(LocalDateTime nowTime) {
         int[] start = {startTime.getYear(), startTime.getMonthValue(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute(), startTime.getSecond()};
         weatherData.add(weather);
         int[] nowSeries = {nowTime.getYear(), nowTime.getMonthValue(), nowTime.getDayOfMonth(), nowTime.getHour(), nowTime.getMinute(), nowTime.getSecond()};
         nowTimeData.add(nowSeries);
-        Data data = new Data(start, station.getMiasto(), nowTimeData, weatherData, station.getUnits());
-        Data.saveJSON(data, dataFile);
+        Data data = new Data(start, station.getMiasto(), nowTimeData, weatherData, station.getUnits()); // utworzenie obiektu klasy przechowującej dane
+        Data.saveJSON(data, dataFile); // zapis do pliku
     }
 
+    /**
+     * nadpisana metoda z interfejsu Observer
+     * @param weatherStation
+     * @param weather
+     */
     @Override
     public void update(Observable weatherStation, Object weather) {
         WeatherStation station = (WeatherStation) weatherStation;
@@ -410,11 +432,15 @@ public class Controller implements Observer {
 
     }
 
+    /**
+     * metoda do obliczenia danych statystycznych
+     * @return tablica wartości danych statystycznych
+     */
     private double[] calculateStatistics() {
         double liczbaPomiar, minT, maxT, stdT, minP, maxP, stdP, minH, maxH, stdH;
         liczbaPomiar = temperature.getData().size();
         Comparator<XYChart.Data<Number, Number>> valuesY = Comparator.comparingDouble(o -> (double) o.getYValue());
-        temperature.getData().sort(valuesY);
+        temperature.getData().sort(valuesY); // statystyka temperatury obliczana bez uwzględnienia wartości t_min i t_max pobieranych z serweru
         pressure.getData().sort(valuesY);
         humidity.getData().sort(valuesY);
         minT = (double) temperature.getData().get(0).getYValue();
@@ -429,6 +455,11 @@ public class Controller implements Observer {
         return new double[]{liczbaPomiar, minT, maxT, stdT, minP, maxP, stdP, minH, maxH, stdH};
     }
 
+    /**
+     * Metoda obliczająca odchylenie standardowe
+     * @param series seria danych dla której obliczane jest odchylenie
+     * @return
+     */
     private double calcSTD(javafx.scene.chart.XYChart.Series<Number, Number> series) {
         double sum = 0;
         for (int i = 0; i < series.getData().size(); i++) {
